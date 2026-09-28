@@ -21,7 +21,9 @@ class SectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(child: Padding(padding: padding, child: child));
+    return Card(
+      child: Padding(padding: padding, child: child),
+    );
   }
 }
 
@@ -87,11 +89,14 @@ class MacroBar extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label,
-            style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w700,
-                color: AppColors.text)),
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w700,
+            color: AppColors.text,
+          ),
+        ),
         const SizedBox(height: 6),
         ClipRRect(
           borderRadius: BorderRadius.circular(6),
@@ -103,8 +108,10 @@ class MacroBar extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 6),
-        Text('${fmt(value)} / ${fmt(goal)}g',
-            style: const TextStyle(fontSize: 12, color: AppColors.muted)),
+        Text(
+          '${fmt(value)} / ${fmt(goal)}g',
+          style: const TextStyle(fontSize: 12, color: AppColors.muted),
+        ),
       ],
     );
   }
@@ -130,79 +137,79 @@ class SimpleBarChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final maxV = [
-      ...values,
-      goal ?? 0,
-      1.0,
-    ].reduce(math.max) * 1.15;
+    final maxV = [...values, goal ?? 0, 1.0].reduce(math.max) * 1.15;
     return SizedBox(
       height: height + 24,
-      child: LayoutBuilder(builder: (context, c) {
-        final goalY = goal == null ? null : height - (goal! / maxV) * height;
-        return Stack(
-          children: [
-            if (goalY != null)
-              Positioned(
-                top: goalY,
-                left: 0,
-                right: 0,
-                child: Row(
-                  children: List.generate(
-                    (c.maxWidth / 8).floor(),
-                    (i) => Expanded(
-                      child: Container(
-                        height: 1.5,
-                        color: i.isEven
-                            ? AppColors.accent.withValues(alpha: 0.7)
-                            : Colors.transparent,
+      child: LayoutBuilder(
+        builder: (context, c) {
+          final goalY = goal == null ? null : height - (goal! / maxV) * height;
+          return Stack(
+            children: [
+              if (goalY != null)
+                Positioned(
+                  top: goalY,
+                  left: 0,
+                  right: 0,
+                  child: Row(
+                    children: List.generate(
+                      (c.maxWidth / 8).floor(),
+                      (i) => Expanded(
+                        child: Container(
+                          height: 1.5,
+                          color: i.isEven
+                              ? AppColors.accent.withValues(alpha: 0.7)
+                              : Colors.transparent,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: List.generate(values.length, (i) {
-                final h = (values[i] / maxV) * height;
-                final over = goal != null && values[i] > goal! * 1.05;
-                final hi = highlightIndex == i;
-                return Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      AnimatedContainer(
-                        duration: const Duration(milliseconds: 400),
-                        height: math.max(h, values[i] > 0 ? 4 : 2),
-                        margin: const EdgeInsets.symmetric(horizontal: 5),
-                        decoration: BoxDecoration(
-                          color: values[i] <= 0
-                              ? const Color(0xFFE8EEEA)
-                              : over
-                                  ? AppColors.accent
-                                  : color.withValues(alpha: hi ? 1 : 0.75),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      SizedBox(
-                        height: 18,
-                        child: Text(
-                          labels[i],
-                          style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: hi ? FontWeight.w800 : FontWeight.w500,
-                            color: hi ? AppColors.text : AppColors.muted,
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: List.generate(values.length, (i) {
+                  final h = (values[i] / maxV) * height;
+                  final over = goal != null && values[i] > goal! * 1.05;
+                  final hi = highlightIndex == i;
+                  return Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 400),
+                          height: math.max(h, values[i] > 0 ? 4 : 2),
+                          margin: const EdgeInsets.symmetric(horizontal: 5),
+                          decoration: BoxDecoration(
+                            color: values[i] <= 0
+                                ? const Color(0xFFE8EEEA)
+                                : over
+                                ? AppColors.accent
+                                : color.withValues(alpha: hi ? 1 : 0.75),
+                            borderRadius: BorderRadius.circular(6),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                );
-              }),
-            ),
-          ],
-        );
-      }),
+                        const SizedBox(height: 6),
+                        SizedBox(
+                          height: 18,
+                          child: Text(
+                            labels[i],
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: hi
+                                  ? FontWeight.w800
+                                  : FontWeight.w500,
+                              color: hi ? AppColors.text : AppColors.muted,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 }
@@ -227,9 +234,11 @@ class LineChartPainter extends CustomPainter {
     final pad = (maxV - minV) * 0.15;
     minV -= pad;
     maxV += pad;
-    double y(double v) => size.height - (v - minV) / (maxV - minV) * size.height;
-    double x(int i) =>
-        values.length == 1 ? size.width / 2 : i / (values.length - 1) * size.width;
+    double y(double v) =>
+        size.height - (v - minV) / (maxV - minV) * size.height;
+    double x(int i) => values.length == 1
+        ? size.width / 2
+        : i / (values.length - 1) * size.width;
 
     final grid = Paint()
       ..color = const Color(0xFFE8EEEA)
@@ -285,7 +294,10 @@ class LineChartPainter extends CustomPainter {
     for (var i = 0; i < values.length; i++) {
       canvas.drawCircle(Offset(x(i), y(values[i])), 4, dot);
       canvas.drawCircle(
-          Offset(x(i), y(values[i])), 2, Paint()..color = Colors.white);
+        Offset(x(i), y(values[i])),
+        2,
+        Paint()..color = Colors.white,
+      );
     }
   }
 
@@ -306,9 +318,11 @@ class EmptyHint extends StatelessWidget {
         children: [
           Icon(icon, size: 40, color: AppColors.muted.withValues(alpha: 0.5)),
           const SizedBox(height: 8),
-          Text(text,
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: AppColors.muted)),
+          Text(
+            text,
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: AppColors.muted),
+          ),
         ],
       ),
     );

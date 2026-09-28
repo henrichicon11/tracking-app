@@ -144,21 +144,27 @@ class TrackerProvider extends ChangeNotifier {
     final query = q.trim().toLowerCase();
     if (query.isEmpty) return allFoods;
     return allFoods
-        .where((f) =>
-            f.name.toLowerCase().contains(query) ||
-            f.category.toLowerCase().contains(query))
+        .where(
+          (f) =>
+              f.name.toLowerCase().contains(query) ||
+              f.category.toLowerCase().contains(query),
+        )
         .toList();
   }
 
   Future<void> addCustomFood(Food f) async {
-    _customFoods.removeWhere((x) => x.name.toLowerCase() == f.name.toLowerCase());
+    _customFoods.removeWhere(
+      (x) => x.name.toLowerCase() == f.name.toLowerCase(),
+    );
     _customFoods.insert(0, f);
     notifyListeners();
     await storage.saveCustomFood(f);
   }
 
   Future<void> deleteCustomFood(Food f) async {
-    _customFoods.removeWhere((x) => x.name.toLowerCase() == f.name.toLowerCase());
+    _customFoods.removeWhere(
+      (x) => x.name.toLowerCase() == f.name.toLowerCase(),
+    );
     notifyListeners();
     await storage.deleteCustomFood(f.name);
   }
@@ -175,8 +181,9 @@ class TrackerProvider extends ChangeNotifier {
 
   // ---------- Weight ----------
   List<WeightEntry> get weights {
-    final list = _weights.entries.map((e) => WeightEntry(e.key, e.value)).toList()
-      ..sort((a, b) => a.date.compareTo(b.date));
+    final list =
+        _weights.entries.map((e) => WeightEntry(e.key, e.value)).toList()
+          ..sort((a, b) => a.date.compareTo(b.date));
     return list;
   }
 
@@ -200,8 +207,11 @@ class TrackerProvider extends ChangeNotifier {
   List<MapEntry<DateTime, DayTotals>> lastDays(int days) {
     final today = DateTime.now();
     return List.generate(days, (i) {
-      final d = DateTime(today.year, today.month, today.day)
-          .subtract(Duration(days: days - 1 - i));
+      final d = DateTime(
+        today.year,
+        today.month,
+        today.day,
+      ).subtract(Duration(days: days - 1 - i));
       return MapEntry(d, totalsFor(dateKey(d)));
     });
   }

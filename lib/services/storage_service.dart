@@ -34,10 +34,8 @@ class StorageService {
   Future<void> deleteEntry(String id) => _entries.delete(id);
 
   // Custom foods
-  List<Food> loadCustomFoods() => _customFoods.values
-      .whereType<Map>()
-      .map((m) => Food.fromMap(m))
-      .toList();
+  List<Food> loadCustomFoods() =>
+      _customFoods.values.whereType<Map>().map((m) => Food.fromMap(m)).toList();
   Future<void> saveCustomFood(Food f) =>
       _customFoods.put(f.name.toLowerCase(), f.toMap());
   Future<void> deleteCustomFood(String name) =>
@@ -45,16 +43,16 @@ class StorageService {
 
   // Water (ml per date)
   Map<String, double> loadWater() => {
-        for (final k in _water.keys)
-          k.toString(): (_water.get(k) as num?)?.toDouble() ?? 0,
-      };
+    for (final k in _water.keys)
+      k.toString(): (_water.get(k) as num?)?.toDouble() ?? 0,
+  };
   Future<void> saveWater(String date, double ml) => _water.put(date, ml);
 
   // Weight (kg per date)
   Map<String, double> loadWeights() => {
-        for (final k in _weight.keys)
-          k.toString(): (_weight.get(k) as num?)?.toDouble() ?? 0,
-      };
+    for (final k in _weight.keys)
+      k.toString(): (_weight.get(k) as num?)?.toDouble() ?? 0,
+  };
   Future<void> saveWeight(String date, double kg) => _weight.put(date, kg);
   Future<void> deleteWeight(String date) => _weight.delete(date);
 
